@@ -17,7 +17,7 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 
 repositorio="https://github.com/martinlopez5/scripting.git"
-carpeta_repo="bootcamp-devops-2023"
+carpeta_repo="final-project/app-295devops-travel"
 branch="main"
 packages=("apache2" "git" "curl" "jq" "mariadb-server" "php" "libapache2-mod-php" "php-mysql" "php-mbstring" "php-zip" "php-gd" "php-json" "php-curl")
 
@@ -42,13 +42,13 @@ done
 
 
 #Clonacion del REPO
-if [ -d "final-project/$carpeta_repo" ]; then
-    echo -e "${COLOR_VERDE}El Repositorio $carpeta_repo existe${COLOR_RESET}"
-    cd $carpeta_repo && git pull
+if [ -d "$carpeta_repo" ]; then
+    echo -e "${COLOR_VERDE}El Repositorio "$carpeta_repo" existe${COLOR_RESET}"
+    git pull && cd "$carpeta_repo"
 else
-    echo -e "${COLOR_ROJO}El $repositorio no existe, clonando repositorio....${COLOR_RESET}"
+    echo -e "${COLOR_ROJO}El REPOSITORIO no existe, clonando repositorio....${COLOR_RESET}"
     git clone -b $branch $repositorio
-    cd final-project/$carpeta_repo
+    cd "$carpeta_repo"
 fi
 
 
@@ -79,6 +79,8 @@ systemctl start apache2
 systemctl enable apache2 
 #systemctl status apache2
 
+pwd
+
 sed -i "s/\(\$dbPassword\s*=\s*\).*;/\1\"$db_password\";/" config.php
 
 modify_php="<IfModule mod_dir.c>
@@ -89,6 +91,6 @@ echo "$modify_php" > /etc/apache2/mods-enabled/dir.conf
 
 systemctl reload apache2
 
-cp -r final-project/app-295-devops-travel/* /var/www/html/
+cp -r * /var/www/html/
 
 curl localhost/info.php
