@@ -19,7 +19,7 @@ fi
 repositorio="https://github.com/martinlopez5/scripting.git"
 carpeta_repo="bootcamp-devops-2023"
 branch="main"
-packages=("apache2" "git" "curl" "jq" "mysql-server" "php" "libapache2-mod-php" "php-mysql" "php-mbstring" "php-zip" "php-gd" "php-json" "php-curl")
+packages=("apache2" "git" "curl" "jq" "mariadb-server" "php" "libapache2-mod-php" "php-mysql" "php-mbstring" "php-zip" "php-gd" "php-json" "php-curl")
 
 #Actualizar la lista de paquetes
 apt-get update
@@ -42,13 +42,13 @@ done
 
 
 #Clonacion del REPO
-if [ -d "$carpeta_repo" ]; then
+if [ -d "final-project/$carpeta_repo" ]; then
     echo -e "${COLOR_VERDE}El Repositorio $carpeta_repo existe${COLOR_RESET}"
     cd $carpeta_repo && git pull
 else
-    echo -e "${COLOR_ROJO}El $repositorio no existe${COLOR_RESET}"
+    echo -e "${COLOR_ROJO}El $repositorio no existe, clonando repositorio....${COLOR_RESET}"
     git clone -b $branch $repositorio
-    cd $carpeta_repo
+    cd final-project/$carpeta_repo
 fi
 
 
@@ -56,7 +56,7 @@ fi
 systemctl start mariadb
 systemctl enable mariadb
 
-read -p "Ingrese el password de la DB: " db_password
+read -sp "Ingrese el password de la DB: " db_password
 
 mysql <<EOF
 CREATE DATABASE devopstravel;
@@ -65,7 +65,7 @@ GRANT ALL PRIVILEGES ON *.* TO 'codeuser'@'localhost';
 FLUSH PRIVILEGES;
 EOF
 
-sudo systemctl status mariadb
+#sudo systemctl status mariadb
 
 sleep 3
 
@@ -77,18 +77,18 @@ echo "La version de PHP es: $(php -v)"
 sleep 3
 systemctl start apache2 
 systemctl enable apache2 
-systemctl status apache2
+#systemctl status apache2
 
 sed -i "s/\(\$dbPassword\s*=\s*\).*;/\1\"$db_password\";/" config.php
 
-modify_dir="<IfModule mod_dir.c>
+modify_php="<IfModule mod_dir.c>
     DirectoryIndex index.php index.html index.cgi index.pl index.xhtml index.htm
 </IfModule>"
 
-echo "$new_content" > /etc/apache2/mods-enabled/dir.conf
+echo "$modify_php" > /etc/apache2/mods-enabled/dir.conf
 
 systemctl reload apache2
 
-cp -r app-295-devops-travel/* /var/www/html/
+cp -r final-project/app-295-devops-travel/* /var/www/html/
 
 curl localhost/info.php
