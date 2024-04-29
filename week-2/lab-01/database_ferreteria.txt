@@ -1,0 +1,4 @@
+# Codigo Referencia - Nombre - Descripcion - Precio de Venta #
+
+1234 Destornillador Para Atornillar $2.300
+7890 Mate Para tomar mate $4.000
