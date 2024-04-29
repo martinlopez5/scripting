@@ -10,53 +10,85 @@ COLOR_CYAN="\e[36m"
 COLOR_BLANCO="\e[37m"
 COLOR_RESET="\e[0m"
 
-#Validando Usuario ROOT (de esta forma podes sacar el sudo)
 
+#Validando Usuario ROOT (de esta forma podes sacar el sudo)
 if [ "$(id -u)" -ne 0 ]; then
     echo -e "${COLOR_ROJO}El Script debe ser ejecutado por un usuario ROOT${COLOR_RESET}"
 fi
 
-repositorio="bootcamp-devops-2023"
-branch="clase2-linux-bash"
-packages=("apache2" "git" "curl" "jq" "mariadb")
+repositorio="https://github.com/martinlopez5/scripting.git"
+carpeta_repo="bootcamp-devops-2023"
+branch="main"
+packages=("apache2" "git" "curl" "jq" "mysql-server" "php" "libapache2-mod-php" "php-mysql" "php-mbstring" "php-zip" "php-gd" "php-json" "php-curl")
+
+#Actualizar la lista de paquetes
+apt-get update
 
 #Verificar si los paquetes estan instalados.
-
 for package in "${packages[@]}"; do
-    if ! dpkg -l "$package" 2> /dev/null; then
+    if ! dpkg -l "$package" > /dev/null 2>&1; then
         echo -e "${COLOR_VERDE}Instalando "$package"${COLOR_RESET}"
-        apt-get update
-        apt install -y $package
-
-        if [ $? -eq 0 ]; then
-            echo -e "${COLOR_VERDE}El $package se instalo correctamente${COLOR_RESET}"
+        if apt-get install -y "$package"; then
+            echo -e "${COLOR_VERDE}El $package se instaló correctamente${COLOR_RESET}"
         else
-            echo -e "${COLOR_ROJO}Error al Instalar el paquete "$package"${COLOR_RESET}"
+            echo -e "${COLOR_ROJO}Error al instalar el paquete $package${COLOR_RESET}"
             exit 1
         fi
     else
-        echo -e "${COLOR_VERDE}El $package ya fue instalado${COLOR_RESET}"
+        echo -e "${COLOR_VERDE}El $package ya se encuentran instalado.${COLOR_RESET}"
     
     fi
-
 done
 
 
-#Condicional si existe repo
-if [ -d "$REPO" ]; then
-    echo -e "${COLOR_VERDE}El $REPO existe${COLOR_RESET}"
-    cd $REPO && git pull
+#Clonacion del REPO
+if [ -d "$carpeta_repo" ]; then
+    echo -e "${COLOR_VERDE}El Repositorio $carpeta_repo existe${COLOR_RESET}"
+    cd $carpeta_repo && git pull
 else
-    echo -e "${COLOR_ROJO}El $REPO no existe${COLOR_RESET}"
-    git clone .......
+    echo -e "${COLOR_ROJO}El $repositorio no existe${COLOR_RESET}"
+    git clone -b $branch $repositorio
+    cd $carpeta_repo
 fi
 
-cp -r $REPO/* /var/www/html
+
+#Configuracion de Database
+systemctl start mariadb
+systemctl enable mariadb
+
+read -p "Ingrese el password de la DB: " db_password
+
+mysql <<EOF
+CREATE DATABASE devopstravel;
+CREATE USER 'codeuser'@'localhost' IDENTIFIED BY '$db_password';
+GRANT ALL PRIVILEGES ON *.* TO 'codeuser'@'localhost';
+FLUSH PRIVILEGES;
+EOF
+
+sudo systemctl status mariadb
+
+sleep 3
+
+mysql < database/devopstravel.sql
+
+
+#Configuracion de Apache2
+echo "La version de PHP es: $(php -v)"
+sleep 3
+systemctl start apache2 
+systemctl enable apache2 
+systemctl status apache2
+
+sed -i "s/\(\$dbPassword\s*=\s*\).*;/\1\"$db_password\";/" config.php
+
+modify_dir="<IfModule mod_dir.c>
+    DirectoryIndex index.php index.html index.cgi index.pl index.xhtml index.htm
+</IfModule>"
+
+echo "$new_content" > /etc/apache2/mods-enabled/dir.conf
 
 systemctl reload apache2
 
-echo -e "${COLOR_VERDE}finalizado instalacion de WEB.....${COLOR_RESET}"
+cp -r app-295-devops-travel/* /var/www/html/
 
-
-#Configure Database
-
+curl localhost/info.php

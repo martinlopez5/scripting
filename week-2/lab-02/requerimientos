@@ -1,67 +1,51 @@
-Nombre del Proyecto: Herramienta de Gestión de Configuraciones de Proyectos
-Descripción:
+# Nombre del Proyecto: Herramienta de Gestión de Configuraciones de Proyectos
+
+
+## Descripción
+
 El proyecto consiste en desarrollar una herramienta de línea de comandos en Bash que permita gestionar la configuración de proyectos almacenada en archivos de texto (.txt). Esta herramienta estará destinada a simplificar tareas de configuración comunes en el contexto de un equipo de desarrollo o un entorno de operaciones (DevOps).
 Funcionalidades:
 
-
-Crear un nuevo archivo de configuración:
+## Crear un nuevo archivo de configuración
 
 La herramienta debe permitir al usuario crear un nuevo archivo de configuración para un proyecto específico. El usuario debe proporcionar el nombre del archivo y la ubicación donde se almacenará.
 
-
-
-Agregar una nueva configuración al archivo:
+## Agregar una nueva configuración al archivo
 
 Una vez creado un archivo de configuración, la herramienta debe permitir al usuario agregar nuevas configuraciones al archivo existente. Cada configuración constará de un nombre y un valor.
 
-
-
-Modificar una configuración existente:
+## Modificar una configuración existente
 
 La herramienta debe permitir al usuario modificar el valor de una configuración existente en el archivo de configuración.
 
-
-
-Eliminar una configuración:
+## Eliminar una configuración
 
 Se debe proporcionar la opción para que el usuario elimine una configuración específica del archivo de configuración.
 
-
-
-Listar todas las configuraciones:
+## Listar todas las configuraciones
 
 La herramienta debe ser capaz de mostrar todas las configuraciones presentes en el archivo de configuración, mostrando tanto el nombre como el valor de cada una.
 
-
-
-Buscar una configuración por nombre:
+## Buscar una configuración por nombre
 
 Se debe proporcionar una opción para buscar una configuración específica por su nombre y mostrar su valor correspondiente.
 
-
-
-Realizar una copia de seguridad del archivo de configuración:
+## Realizar una copia de seguridad del archivo de configuración
 
 La herramienta debe permitir al usuario realizar una copia de seguridad del archivo de configuración en una ubicación específica.
 
-
-
-Restaurar desde una copia de seguridad:
+## Restaurar desde una copia de seguridad
 
 Se debe proporcionar la capacidad de restaurar el archivo de configuración desde una copia de seguridad previamente realizada.
 
-
-
-Salir de la herramienta:
+## Salir de la herramienta
 
 El usuario debe tener la opción de salir de la herramienta en cualquier momento.
 
-
-
-Requisitos Adicionales:
+## Requisitos Adicionales
 
 La herramienta debe ser robusta y manejar adecuadamente errores como archivos inexistentes, configuraciones duplicadas, etc.
 Se recomienda utilizar funciones y modularizar el código para mejorar la legibilidad y el mantenimiento.
 La herramienta debe ser interactiva, proporcionando mensajes claros y opciones intuitivas para el usuario.
-documentacion
-arquitcvteura
+Documentacion.
+Arquitectura.
